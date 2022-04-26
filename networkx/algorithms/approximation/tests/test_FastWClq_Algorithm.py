@@ -7,7 +7,7 @@ from networkx.algorithms.approximation.FastWClq_Algorithm import FastWClq_Algori
 
 
 """
-
+Create different graphs based on the tests suggested in the previous task.
 """
 def build_test_graph_1():
     g = nx.Graph()
