@@ -1,4 +1,4 @@
-"""Functions for computing large cliques and maximum independent sets."""
+"""Algorithm for computing large cliques."""
 
 import networkx as nx
 
