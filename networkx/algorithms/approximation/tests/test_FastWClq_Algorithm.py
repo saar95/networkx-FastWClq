@@ -1,6 +1,5 @@
-"""Doc tests for the :mod:`networkx.algorithms.approximation.FastWClq_Algorithm` module."""
+"""Unit tests for :mod:`networkx.algorithms.approximation.FastWClq_Algorithm` module."""
 import networkx as nx
-import random
 from networkx.algorithms.approximation.FastWClq_Algorithm import FastWClq_Algorithm
 import unittest
 
