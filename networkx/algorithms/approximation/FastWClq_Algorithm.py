@@ -5,6 +5,7 @@ import doctest
 from networkx.algorithms.approximation import ramsey
 from networkx.utils import not_implemented_for
 
+
 def build_test_graph_1():
     g = nx.Graph()
     g.add_node(0)
@@ -177,5 +178,3 @@ def FastWClq_Algorithm(g: nx.Graph, cutoff: float) -> nx.Graph:
 if __name__ == '__main__':
     (failures, tests) = doctest.testmod(report=True)
     print("{} failures, {} tests".format(failures, tests))
-
-
