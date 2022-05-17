@@ -1,5 +1,13 @@
-"""Algorithm for computing large cliques."""
+"""
+Article details:A Semi-Exact Algorithm for Quickly Computing a Maximum Weight Clique in Large Sparse Graphs.
+    written by Shaowei Cai, Jinkun Lin Yiyuan Wang, Darren Strash
+    Submitted 08/2020; published 09/2021
+    Link: https://www.jair.org/index.php/jair/article/view/12327
+    Saar Barel : 316524370
+    Almog Reuveny : 205883580
+"""
 import asyncio
+import logging
 import random
 from asyncio import Queue
 
@@ -191,7 +199,6 @@ def FindClique(g, best_c):
         t = BMS(g, start_set)
     rand = random.randint(0, len(start_set) - 1)
     u_node_key = list(start_set)[rand]
-    print("AlmogHomo")
     c.add_node(u_node_key, weight=g.nodes[u_node_key]["weight"])
     cand_set = [n for n in g.neighbors(u_node_key)]
     while cand_set is not None:
@@ -353,4 +360,4 @@ if __name__ == '__main__':
     g.add_edge(7, 9)
     g.add_edge(5, 7)
     g.add_edge(5, 9)
-    FastWClq_Algorithm(g, 100)
+
