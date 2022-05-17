@@ -15,9 +15,7 @@ upper_bound0 = 0
 upper_bound1 = 0
 upper_bound2 = 0
 
-'''
-build_test_graph() - Constructs different types of graphs (in different scenarios)
-'''
+
 def build_test_graph_1():
     g = nx.Graph()
     g.add_node(0)
@@ -101,10 +99,6 @@ def build_test_graph_5():
 
 
 def get_weight_clique(g):
-    '''
-    :param g: Given clique
-    :return: Weight - The sum of the weights of all the vertices of the clique
-    '''
     weight = 0
     for node in g:
         weight += g.nodes[node]["weight"]
@@ -112,11 +106,6 @@ def get_weight_clique(g):
 
 
 def get_weight_clique_list(g, l):
-    '''
-    :param g: Graph
-    :param l: Clique List
-    :return: Weight - The sum of the weights of all the vertices of the Clique List
-    '''
     weight = 0
     for node in l:
         weight += g.nodes[node]["weight"]
@@ -124,15 +113,6 @@ def get_weight_clique_list(g, l):
 
 
 def choose_solution_vertex(cand_set, t):
-    '''
-    :param cand_set:
-    :param t:
-    In each iteration we will check whether the neighbor "contributes to the clique" with the help
-    of Heuristic function b^.
-    b^ - A heuristic function Which returns the value of a vertex, which is calculated by the average of the
-    upper and lower limit that found so far and his weight
-    :return: Returns the best vertex that can contribute to the current clique
-    '''
     max_weight = 0
     # if len(cand_set) < t:
     # upper/lower bound is missing, need to understand the if statement
@@ -149,6 +129,7 @@ def choose_solution_vertex(cand_set, t):
 
 def BMS(g, node_set):
     """
+
     Parameters g ,node_set
     ----------
     g = graph
@@ -156,6 +137,7 @@ def BMS(g, node_set):
 
     Returns the best node key by heuristic function
     -------
+
     """
     rand = random.randint(0, len(node_set) - 1)
     best = list(node_set)[rand]
@@ -175,15 +157,6 @@ def intersection(lst1, lst2):
 
 
 def FindClique(g, best_c):
-    '''
-
-    :param g: Graph
-    :param best_c: The best clique found so far
-    :return: Returns a clique that in any iteration can be improved with the help of a
-            heuristic functions: improveclique() & BMS().
-    BMS() - Returns the best node key by heuristic function
-    improveclique() -
-    '''
     start_set = None
     c = nx.Graph()
     if start_set is None:
@@ -210,14 +183,6 @@ def FindClique(g, best_c):
 
 
 def ReduceGraph(g, c0):
-    '''
-
-    :param g: Graph
-    :param c0: A clique
-    The function goes through all the vertices of the graph and checks if the weight of the click is greater than the
-    upper bound of the vertex, if so - The algorithm adds the "bad" vertex to the queue that holds all the bad vertices.
-    :return: New graph - from which the "bad" vertices were removed.
-    '''
     queue = asyncio.Queue()
     removed_nodes = []
 
@@ -239,13 +204,6 @@ def ReduceGraph(g, c0):
 
 
 def FastWClq_Algorithm(g: nx.Graph, cutoff: float) -> nx.Graph:
-    '''
-
-    :param g: Input graph
-    :param cutoff: Limiting the algorithm to a set runtime
-    :return: The best clique found up to the cutoff time
-    '''
-
     """
     Article details:A Semi-Exact Algorithm for Quickly Computing a Maximum Weight Clique in Large Sparse Graphs.
     written by Shaowei Cai, Jinkun Lin Yiyuan Wang, Darren Strash

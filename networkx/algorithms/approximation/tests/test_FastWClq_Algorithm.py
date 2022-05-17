@@ -1,6 +1,6 @@
 """Unit tests for :mod:`networkx.algorithms.approximation.FastWClq_Algorithm` module."""
 import networkx as nx
-from networkx.algorithms.approximation.FastWClq_Algorithm import FastWClq_Algorithm
+from networkx.algorithms.approximation.FastWClq_Algorithm_old import FastWClq_Algorithm
 import unittest
 
 
