@@ -109,10 +109,20 @@ def build_test_graph_5():
 
 
 def get_weight_clique(g):
-    '''
+    """
     :param g: Given clique
     :return: Weight - The sum of the weights of all the vertices of the clique
-    '''
+
+    >>> g1 = build_test_graph_1
+    >>> g2 = build_test_graph_2()
+    >>> g3 = build_test_graph_3()
+    >>> get_weight_clique(g1) == 74
+    True
+    >>>get_weight_clique(g1) == 0
+    True
+    >>> get_weight_clique(g2) == 74
+    True
+    """
     weight = 0
     for node in g:
         weight += g.nodes[node]["weight"]
@@ -120,11 +130,23 @@ def get_weight_clique(g):
 
 
 def get_weight_clique_list(g, l):
-    '''
+    """
     :param g: Graph
     :param l: Clique List
     :return: Weight - The sum of the weights of all the vertices of the Clique List
-    '''
+    >>> g1 = build_test_graph_1
+    >>> g2 = build_test_graph_2()
+    >>> g3 = build_test_graph_3()
+    >>> l1 = [0,1,2,3]
+    >>> l2 = [0,1,2,3,4,5,6]
+    >>> l3 = [0,1,2,3,4,5,6,7,8]
+    >>> get_weight_clique_list(g1,l1) == 0
+    True
+    >>> get_weight_clique_list(g2,l2) == 74
+    True
+    >>> get_weight_clique_list(g3,l3) == 74
+    True
+    """
     weight = 0
     for node in l:
         weight += g.nodes[node]["weight"]
@@ -132,7 +154,7 @@ def get_weight_clique_list(g, l):
 
 
 def choose_solution_vertex(cand_set, t):
-    '''
+    """
     :param cand_set:
     :param t:
     In each iteration we will check whether the neighbor "contributes to the clique" with the help
@@ -140,7 +162,7 @@ def choose_solution_vertex(cand_set, t):
     b^ - A heuristic function Which returns the value of a vertex, which is calculated by the average of the
     upper and lower limit that found so far and his weight
     :return: Returns the best vertex that can contribute to the current clique
-    '''
+    """
     max_weight = 0
     # if len(cand_set) < t:
     # upper/lower bound is missing, need to understand the if statement
@@ -178,12 +200,35 @@ def BMS(g, node_set):
 
 
 def intersection(lst1, lst2):
+    """
+    In mathematics, the intersection of two sets A and B, is the set containing all elements of A that also belong to B
+     or equivalently, all elements of B that also belong to A.
+    Parameters
+    ----------
+    lst1 = list
+    lst2 = list
+
+    Returns the intersection of lst1 and lst2
+    -------
+    >>> lst1 = [0,1,2,3]
+    >>> lst2 = [2,3,4,5]
+    >>> lst3 = [0,1,4,5,6]
+    >>> intersection(lst1,lst2)
+    [2,3]
+    >>> intersection(lst1,lst3)
+    [0,1]
+    >>> intersection(lst2,lst3)
+    [4,5]
+    >>> lst3 = [10,20,30,40]
+    >>> intersection(lst1,lst3)
+    []
+    """
     lst3 = [value for value in lst1 if value in lst2]
     return lst3
 
 
 def FindClique(g, best_c):
-    '''
+    """
 
     :param g: Graph
     :param best_c: The best clique found so far
@@ -191,7 +236,7 @@ def FindClique(g, best_c):
             heuristic functions: improveclique() & BMS().
     BMS() - Returns the best node key by heuristic function
     improveclique() -
-    '''
+    """
     start_set = None
     c = nx.Graph()
     if start_set is None:
@@ -217,14 +262,14 @@ def FindClique(g, best_c):
 
 
 def ReduceGraph(g, c0):
-    '''
+    """
 
     :param g: Graph
     :param c0: A clique
     The function goes through all the vertices of the graph and checks if the weight of the click is greater than the
     upper bound of the vertex, if so - The algorithm adds the "bad" vertex to the queue that holds all the bad vertices.
     :return: New graph - from which the "bad" vertices were removed.
-    '''
+    """
     queue = asyncio.Queue()
     removed_nodes = []
 
@@ -246,14 +291,13 @@ def ReduceGraph(g, c0):
 
 
 def FastWClq_Algorithm(g: nx.Graph, cutoff: float) -> nx.Graph:
-    '''
+    """
 
     :param g: Input graph
     :param cutoff: Limiting the algorithm to a set runtime
     :return: The best clique found up to the cutoff time
-    '''
 
-    """
+
     Article details:A Semi-Exact Algorithm for Quickly Computing a Maximum Weight Clique in Large Sparse Graphs.
     written by Shaowei Cai, Jinkun Lin Yiyuan Wang, Darren Strash
     Submitted 08/2020; published 09/2021
