@@ -6,10 +6,9 @@ Article details:A Semi-Exact Algorithm for Quickly Computing a Maximum Weight Cl
     Saar Barel : 316524370
     Almog Reuveny : 205883580
 """
-import asyncio
-import logging
+import queue
 import random
-from asyncio import Queue
+
 
 import networkx as nx
 import doctest
@@ -128,6 +127,8 @@ def get_weight_clique(g):
         weight += g.nodes[node]["weight"]
     return weight
 
+def list_subtraction(x,y):
+    return [item for item in x if item not in y]
 
 def get_weight_clique_list(g, l):
     """
@@ -153,7 +154,7 @@ def get_weight_clique_list(g, l):
     return weight
 
 
-def choose_solution_vertex(cand_set, t):
+def choose_solution_vertex(g, cand_set, t):
     """
     :param cand_set:
     :param t:
@@ -183,8 +184,9 @@ def BMS(g, node_set):
     ----------
     g = graph
     node_set = candidates
-
-    Returns the best node key by heuristic function
+    Heuristic function.
+    The function searches for the node with the highest potential. (the potential is calculated according to the number of neighbors of each node)
+    Return value: The node with the highest number of neighbors
     -------
     """
     rand = random.randint(0, len(node_set) - 1)
@@ -239,6 +241,7 @@ def FindClique(g, best_c):
     """
     start_set = None
     c = nx.Graph()
+    global upper_bound0
     if start_set is None:
         start_set = g.nodes
         t = BMS(g, start_set)
@@ -248,9 +251,13 @@ def FindClique(g, best_c):
     cand_set = [n for n in g.neighbors(u_node_key)]
     while cand_set is not None:
         v = choose_solution_vertex(g, cand_set, t)
-        if get_weight_clique(c) + g.nodes[v]["weight"] + get_weight_clique_list(g, intersection(list(cand_set),
-                                                                                                [n for n in
-                                                                                                 g.neighbors(v)])):
+        a = get_weight_clique(c)
+        b = g.nodes[v]["weight"]
+        d = get_weight_clique_list(g, intersection(list(cand_set),[n for n in g.neighbors(v)]))
+        e = get_weight_clique(best_c)
+        if get_weight_clique(c) + g.nodes[v]["weight"] + get_weight_clique_list(g, intersection(list(cand_set),[n for n in g.neighbors(v)])) <= get_weight_clique(best_c):
+            c=best_c
+            upper_bound0 = get_weight_clique(c)
             break
         c.add_node(v, weight=g.nodes[v]["weight"])
         cand_set.remove(v)
@@ -270,23 +277,22 @@ def ReduceGraph(g, c0):
     upper bound of the vertex, if so - The algorithm adds the "bad" vertex to the queue that holds all the bad vertices.
     :return: New graph - from which the "bad" vertices were removed.
     """
-    queue = asyncio.Queue()
+    q = queue.Queue()
     removed_nodes = []
-
     for node in g.nodes.keys():
-        if upper_bound0 <= get_weight_clique(c0) or upper_bound1 <= get_weight_clique(
-                c0) or upper_bound2 <= get_weight_clique(c0):
-            queue.put(node)
-    while not queue.empty():
-        u = queue.get()
+        if upper_bound0 < get_weight_clique(c0) or upper_bound0 < get_weight_clique(
+                c0) or upper_bound0 < get_weight_clique(c0):
+            q.put(node)
+    while not q.empty():
+        u = q.get()
+        u_neighbors = list([n for n in g.neighbors(u)])
         g.remove_node(u)
         removed_nodes.append(u)
-        u_neighbors = list([n for n in g.neighbors(u)])
-        Nr = u_neighbors - removed_nodes
+        Nr = list_subtraction(u_neighbors,removed_nodes)
         for v in Nr:
-            if upper_bound0 <= get_weight_clique(c0) or upper_bound1 <= get_weight_clique(
-                    c0) or upper_bound2 <= get_weight_clique(c0):
-                queue.put(v)
+            if upper_bound0 <= get_weight_clique(c0) or upper_bound0 <= get_weight_clique(
+                    c0) or upper_bound0 <= get_weight_clique(c0):
+                q.put(v)
     return g
 
 
@@ -383,13 +389,13 @@ def FastWClq_Algorithm(g: nx.Graph, cutoff: float) -> nx.Graph:
     c = nx.Graph()
     best_c = g
     while time.time() - start < cutoff:
-        while get_weight_clique(c) <= get_weight_clique(best_c):
+        while get_weight_clique(c) < get_weight_clique(best_c):
             c = FindClique(g, best_c)
-        best_C = c
-        g = ReduceGraph(g, get_weight_clique(best_C))
+        best_c = c
+        g = ReduceGraph(g, best_c)
         if g is None:
-            return best_C
-    return best_C
+            return best_c
+    return best_c
 
 
 if __name__ == '__main__':
@@ -404,4 +410,5 @@ if __name__ == '__main__':
     g.add_edge(7, 9)
     g.add_edge(5, 7)
     g.add_edge(5, 9)
+    print(FastWClq_Algorithm(g,10).nodes)
 
