@@ -19,7 +19,7 @@ import time
 
 upper_bound0 = 0
 upper_bound1 = 0
-upper_bound2 = 0
+upper_bound2 = 3
 
 def graph_builder(weight_dict, neighbors_dict):
     g = nx.Graph()
