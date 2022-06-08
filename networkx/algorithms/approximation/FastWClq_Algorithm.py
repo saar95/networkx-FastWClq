@@ -13,7 +13,6 @@ import random
 import networkx as nx
 import doctest
 from datetime import datetime
-
 from networkx import Graph
 from networkx.algorithms.clique import max_weight_clique
 import time
@@ -21,6 +20,25 @@ import time
 upper_bound0 = 0
 upper_bound1 = 0
 upper_bound2 = 0
+
+def graph_builder(weight_dict, neighbors_dict):
+    g = nx.Graph()
+    for i in weight_dict:
+        g.add_node(i,weight = weight_dict[i])
+    for i in neighbors_dict:
+        for j in neighbors_dict[i]:
+            for k in j:
+                if(int(k) in g.nodes):
+                    g.add_edge(i,int(k))
+                else:
+                    g.add_node(int(k), weight = 0)
+                    g.add_edge(i, int(k))
+
+    return FastWClq_Algorithm(g,10)
+
+
+
+
 
 '''
 build_test_graph() - Constructs different types of graphs (in different scenarios)
@@ -396,6 +414,7 @@ def FastWClq_Algorithm(g: nx.Graph, cutoff: float) -> nx.Graph:
         if g is None:
             return best_c
     return best_c
+
 
 
 if __name__ == '__main__':
