@@ -1,0 +1,6 @@
+networkx~=2.8.1.dev0
+requests~=2.27.1
+numpy~=1.22.4
+Flask~=2.1.2
+gspread~=5.4.0
+setuptools~=60.2.0
