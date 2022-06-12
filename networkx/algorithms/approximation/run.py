@@ -1,5 +1,5 @@
 from flask import Flask, render_template, request
-from networkx.algorithms.approximation.url_to_graph import clique_to_sheet
+from url_to_graph import clique_to_sheet
 app = Flask(__name__)
 app.config["SECRET_KEY"] = "RandomString"
 message = "WELL DONE !!!"

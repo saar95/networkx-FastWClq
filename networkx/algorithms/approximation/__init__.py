@@ -9,6 +9,15 @@
     or ``from networkx.algorithms.approximation import function_name``
 
 """
+
+# Here, we add a secret key:
+
+from flask import Flask
+
+app = Flask(__name__)
+app.config['SECRET_KEY'] = 'ecf6e975838a2f7bf3c5dbe7d55ebe5b'  ###
+
+
 from networkx.algorithms.approximation.clustering_coefficient import *
 from networkx.algorithms.approximation.clique import *
 from networkx.algorithms.approximation.connectivity import *

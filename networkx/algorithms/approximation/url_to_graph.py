@@ -1,6 +1,6 @@
 import gspread
 import numpy as np
-from networkx.algorithms.approximation.FastWClq_Algorithm import graph_builder,get_weight_clique
+from FastWClq_Algorithm import graph_builder,get_weight_clique
 
 
 def extract_val(sheet):
