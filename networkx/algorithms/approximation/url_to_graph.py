@@ -32,11 +32,17 @@ def extract_val(sheet):
 
 
 def clique_to_sheet(input):
+    out = 'Output'
     account = gspread.service_account("multiply-matrices-3c860f58740b.json")
     spreadsheet = account.open("Create Your Graph")
-    a_matrix = spreadsheet.worksheet(input)
-    A_val = a_matrix.get_all_values()
-    weight_dict, neighbors_dict= extract_val(A_val)
+    input_graph = spreadsheet.worksheet(input)
+    try:
+        output_graph = spreadsheet.worksheet(out)
+        spreadsheet.del_worksheet(output_graph)
+    except:
+        print("No output")
+    g_val = input_graph.get_all_values()
+    weight_dict, neighbors_dict= extract_val(g_val)
     g = graph_builder(weight_dict, neighbors_dict)
     title = "Output"
     spreadsheet.add_worksheet(title=title,rows=4, cols=len(g.nodes)+1)

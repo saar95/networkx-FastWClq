@@ -1,0 +1,96 @@
+<!DOCTYPE html>
+<html>
+<head>
+    <title>Page Layout</title>
+    <style>
+        .head1 {
+            font-size:40px;
+            color:#326EED;
+            font-weight:bold;
+        }
+        .head2 {
+            font-size:17px;
+            margin-left:10px;
+            margin-bottom:15px;
+        }
+        body {
+            margin: 0 auto;
+            background-position:center;
+            background-size: contain;
+        }
+
+        .menu {
+            position: sticky;
+            top: 0;
+            background-color: #326EED;
+            padding:10px 0px 10px 0px;
+            color:black;
+            margin: 0 auto;
+            overflow: hidden;
+        }
+        .menu a {
+            float: left;
+            color: black;
+            text-align: center;
+            padding: 14px 16px;
+            text-decoration: none;
+            font-size: 20px;
+        }
+        .menu-log {
+            right: auto;
+            float: right;
+        }
+        footer {
+            width: 100%;
+            bottom: 0px;
+            background-color: #000;
+            color: #fff;
+            position: absolute;
+            padding-top:20px;
+            padding-bottom:50px;
+            text-align:center;
+            font-size:30px;
+            font-weight:bold;
+        }
+        .body_sec {
+            margin-left:20px;
+        }
+    </style>
+</head>
+
+<body>
+
+    <!-- Header Section -->
+    <header>
+        <div class="head1">Maximum Weight Clique</div>
+        <div class="head2">A Semi-Exact Algorithm for Quickly Computing a Maximum Weight Clique in Large Sparse Graphs.</div>
+    </header>
+
+    <!-- Menu Navigation Bar -->
+    <nav class="menu">
+        <a href="#home">HOME</a>
+        <a href="https://en.wikipedia.org/wiki/Clique_(graph_theory)">WIKIPEDIA</a>
+        <a href="https://www.jair.org/index.php/jair/article/view/12327">ARTICLE</a>
+        <div class="menu-log">
+            <a href="https://github.com/saar95/networkx-FastWClq/blob/main/networkx/algorithms/approximation/FastWClq_Algorithm.py">GITHUB</a>
+        </div>
+      </nav>
+
+    <!-- Body section -->
+    <main class = "body_sec">
+        <section id="Content">
+            <h3>On this site you can find the maximum clique by inserting the graphs parameters (Nodes, Edges, Weight)!</h3>
+            <h3>Please edit this doc file to create you own graph</h3>
+            <h2><a href="https://docs.google.com/spreadsheets/d/1ysyLfMkiOadNudJkpyUz-wAVPpKcCK9CXqu9hnQGxrA/edit#gid=0">Google docs graph</a></h2>
+            <h3> Once you have finished editing the google-sheet file please press the button below: </h3>
+        </section>
+      </main>
+
+    <form action="/" , method="post">
+    <input type="submit" ,value="Submit">
+</form>
+
+    <!-- Footer Section -->
+    <footer>Made by: Almog Reuveny & Saar Barel</footer>
+</body>
+</html>
