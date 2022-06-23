@@ -31,9 +31,9 @@ def extract_val(sheet):
 
 
 
-def clique_to_sheet(input):
+def clique_to_sheet(input,url):
     out = 'Output'
-    account = gspread.service_account("multiply-matrices-3c860f58740b.json")
+    account = gspread.service_account(url)
     spreadsheet = account.open("Create Your Graph")
     input_graph = spreadsheet.worksheet(input)
     try:
@@ -45,15 +45,15 @@ def clique_to_sheet(input):
     weight_dict, neighbors_dict= extract_val(g_val)
     g = graph_builder(weight_dict, neighbors_dict)
     title = "Output"
-    spreadsheet.add_worksheet(title=title,rows=4, cols=len(g.nodes)+1)
+    spreadsheet.add_worksheet(title=title,rows=4, cols=len(g[0])+1)
     clique_sheet = spreadsheet.worksheet(title)
     clique_sheet.update('A1', 'Nodes')
     clique_sheet.update('A2', 'Clique Weight')
     char = chr(ord('B'))
-    for i in g.nodes:
+    for i in g[0]:
         clique_sheet.update(char+str(1),i)
         char = chr(ord(char)+1)
-    clique_sheet.update('B2',get_weight_clique(g))
+    clique_sheet.update('B2',g[1])
 
 
 

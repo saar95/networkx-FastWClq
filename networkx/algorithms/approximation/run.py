@@ -13,7 +13,7 @@ def action():
 @app.route('/', methods=['GET', 'POST'])
 def get_data():
     url = request.form.get('url')
-    clique_to_sheet('Input')
+    clique_to_sheet('Input',url)
     return message
 
 

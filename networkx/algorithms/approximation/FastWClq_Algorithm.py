@@ -9,7 +9,7 @@ Article details:A Semi-Exact Algorithm for Quickly Computing a Maximum Weight Cl
 import queue
 import random
 
-
+import matplotlib.pyplot as plt
 import networkx as nx
 import doctest
 from datetime import datetime
@@ -21,34 +21,34 @@ upper_bound0 = 0
 upper_bound1 = 0
 upper_bound2 = 3
 
+
 def graph_builder(weight_dict, neighbors_dict):
     g = nx.Graph()
     for i in weight_dict:
-        g.add_node(i,weight = weight_dict[i])
+        g.add_node(i, weight=weight_dict[i])
     for i in neighbors_dict:
         for j in neighbors_dict[i]:
             for k in j:
-                if(int(k) in g.nodes):
-                    g.add_edge(i,int(k))
+                if (int(k) in g.nodes):
+                    g.add_edge(i, int(k))
                 else:
-                    g.add_node(int(k), weight = 0)
+                    g.add_node(int(k), weight=0)
                     g.add_edge(i, int(k))
 
-    return FastWClq_Algorithm(g,10)
-
-
-
+    return FastWClq_Algorithm(g, 10)
 
 
 '''
 build_test_graph() - Constructs different types of graphs (in different scenarios)
 '''
+
+
 def build_test_graph_1():
     g = nx.Graph()
-    g.add_node(0)
-    g.add_node(1)
-    g.add_node(2)
-    g.add_node(3)
+    g.add_node(0, weight=1)
+    g.add_node(1, weight=2)
+    g.add_node(2, weight=3)
+    g.add_node(3, weight=4)
     g.add_edge(0, 2)
     g.add_edge(1, 0)
     g.add_edge(0, 3)
@@ -60,13 +60,13 @@ def build_test_graph_1():
 
 def build_test_graph_2():
     g = nx.Graph()
-    g.add_node(0)
-    g.add_node(1)
-    g.add_node(2)
-    g.add_node(3)
-    g.add_node(4)
-    g.add_node(5)
-    g.add_node(6)
+    g.add_node(0, weight=4)
+    g.add_node(1, weight=12)
+    g.add_node(2, weight=22)
+    g.add_node(3, weight=6)
+    g.add_node(4, weight=2)
+    g.add_node(5, weight=13)
+    g.add_node(6, weight=9)
     g.add_edge(0, 2, weight=4)
     g.add_edge(1, 0, weight=8)
     g.add_edge(0, 3, weight=12)
@@ -81,15 +81,15 @@ def build_test_graph_2():
 
 def build_test_graph_3():
     g = nx.Graph()
-    g.add_node(0)
-    g.add_node(1)
-    g.add_node(2)
-    g.add_node(3)
-    g.add_node(4)
-    g.add_node(5)
-    g.add_node(6)
-    g.add_node(7)
-    g.add_node(8)
+    g.add_node(0, weight=14)
+    g.add_node(1, weight=12)
+    g.add_node(2, weight=6)
+    g.add_node(3, weight=5)
+    g.add_node(4, weight=11)
+    g.add_node(5, weight=9)
+    g.add_node(6, weight=2)
+    g.add_node(7, weight=3)
+    g.add_node(8, weight=4)
     g.add_edge(0, 2, weight=4)
     g.add_edge(1, 0, weight=8)
     g.add_edge(0, 3, weight=12)
@@ -108,19 +108,19 @@ def build_test_graph_3():
 def build_test_graph_4():
     clique_list = [8, 25, 48, 55, 128, 546, 7850, 45123, 85147, 97852]
     g = nx.Graph()
-    for key in range(100000):
-        g.add_node(key)
+    for key in range(1,1000):
+        g.add_node(key, weight=key)
     for i in range(len(clique_list)):
         for j in range(len(clique_list)):
             if i != j:
-                g.add_edge(clique_list[j], clique_list[i], weight=random.randint(0, 10000))
+                g.add_edge(clique_list[j], clique_list[i])
     return g
 
 
 def build_test_graph_5():
     g = nx.Graph()
     for key in range(1000):
-        g.add_node(key)
+        g.add_node(key, weight=key)
         g.add_edge(key, key, weight=key)
     return g
 
@@ -129,42 +129,22 @@ def get_weight_clique(g):
     """
     :param g: Given clique
     :return: Weight - The sum of the weights of all the vertices of the clique
-
-    >>> g1 = build_test_graph_1
-    >>> g2 = build_test_graph_2()
-    >>> g3 = build_test_graph_3()
-    >>> get_weight_clique(g1) == 74
-    True
-    >>>get_weight_clique(g1) == 0
-    True
-    >>> get_weight_clique(g2) == 74
-    True
     """
     weight = 0
     for node in g:
         weight += g.nodes[node]["weight"]
     return weight
 
-def list_subtraction(x,y):
+
+def list_subtraction(x, y):
     return [item for item in x if item not in y]
+
 
 def get_weight_clique_list(g, l):
     """
     :param g: Graph
     :param l: Clique List
     :return: Weight - The sum of the weights of all the vertices of the Clique List
-    >>> g1 = build_test_graph_1
-    >>> g2 = build_test_graph_2()
-    >>> g3 = build_test_graph_3()
-    >>> l1 = [0,1,2,3]
-    >>> l2 = [0,1,2,3,4,5,6]
-    >>> l3 = [0,1,2,3,4,5,6,7,8]
-    >>> get_weight_clique_list(g1,l1) == 0
-    True
-    >>> get_weight_clique_list(g2,l2) == 74
-    True
-    >>> get_weight_clique_list(g3,l3) == 74
-    True
     """
     weight = 0
     for node in l:
@@ -194,6 +174,10 @@ def choose_solution_vertex(g, cand_set, t):
         if g.nodes[v_temp_key]["weight"] > g.nodes[v_best_key]["weight"]:  # need to implement b^ , t is missing
             v_best_key = v_temp_key
     return v_best_key
+
+
+def best_clique_weight(g):
+    return g[1]
 
 
 def BMS(g, node_set):
@@ -234,11 +218,11 @@ def intersection(lst1, lst2):
     >>> lst2 = [2,3,4,5]
     >>> lst3 = [0,1,4,5,6]
     >>> intersection(lst1,lst2)
-    [2,3]
+    [2, 3]
     >>> intersection(lst1,lst3)
-    [0,1]
+    [0, 1]
     >>> intersection(lst2,lst3)
-    [4,5]
+    [4, 5]
     >>> lst3 = [10,20,30,40]
     >>> intersection(lst1,lst3)
     []
@@ -271,10 +255,13 @@ def FindClique(g, best_c):
         v = choose_solution_vertex(g, cand_set, t)
         a = get_weight_clique(c)
         b = g.nodes[v]["weight"]
-        d = get_weight_clique_list(g, intersection(list(cand_set),[n for n in g.neighbors(v)]))
+        d = get_weight_clique_list(g, intersection(list(cand_set), [n for n in g.neighbors(v)]))
         e = get_weight_clique(best_c)
-        if get_weight_clique(c) + g.nodes[v]["weight"] + get_weight_clique_list(g, intersection(list(cand_set),[n for n in g.neighbors(v)])) <= get_weight_clique(best_c):
-            c=best_c
+        if get_weight_clique(c) + g.nodes[v]["weight"] + get_weight_clique_list(g, intersection(list(cand_set),
+                                                                                                [n for n in g.neighbors(
+                                                                                                        v)])) <= get_weight_clique(
+                best_c):
+            c = best_c
             upper_bound0 = get_weight_clique(c)
             break
         c.add_node(v, weight=g.nodes[v]["weight"])
@@ -306,12 +293,20 @@ def ReduceGraph(g, c0):
         u_neighbors = list([n for n in g.neighbors(u)])
         g.remove_node(u)
         removed_nodes.append(u)
-        Nr = list_subtraction(u_neighbors,removed_nodes)
+        Nr = list_subtraction(u_neighbors, removed_nodes)
         for v in Nr:
             if upper_bound0 <= get_weight_clique(c0) or upper_bound0 <= get_weight_clique(
                     c0) or upper_bound0 <= get_weight_clique(c0):
                 q.put(v)
     return g
+
+
+def improveClique(best_c):
+    c = nx.max_weight_clique(best_c)
+    if get_weight_clique(best_c) < best_clique_weight(c):
+        return best_c
+    else:
+        return c
 
 
 def FastWClq_Algorithm(g: nx.Graph, cutoff: float) -> nx.Graph:
@@ -332,76 +327,43 @@ def FastWClq_Algorithm(g: nx.Graph, cutoff: float) -> nx.Graph:
 
 
     Example 1: A small graph (with 4 vertices) that is neither weighted nor directed. In addition, all the sides of the graph are connected to each other.
-    >>> solution_g = nx.Graph()
-    >>> solution_g.add_node(0)
-    >>> solution_g.add_node(1)
-    >>> solution_g.add_node(2)
-    >>> solution_g.add_node(3)
-    >>> solution_g.add_edge(0,2)
-    >>> solution_g.add_edge(1,0)
-    >>> solution_g.add_edge(0,3)
-    >>> solution_g.add_edge(2,3)
-    >>> solution_g.add_edge(1,2)
-    >>> solution_g.add_edge(1,3)
     >>> g = build_test_graph_1()
-    >>> clique = FastWClq_Algorithm(g,100)
-    >>> nx.is_isomorphic(solution_g,g)
-    True
+    >>> clique = FastWClq_Algorithm(g,10)
+    >>> print(clique)
+    ([3, 2, 1, 0], 10)
 
     Example 2: A medium graph (with two components) is weighted and unadjusted.
     In addition, all the sides of the graph are connected to each other in each component, so there are 2 clique in the graph
-    >>> solution_g = nx.Graph()
-    >>> solution_g.add_node(4)
-    >>> solution_g.add_node(5)
-    >>> solution_g.add_node(6)
-    >>> solution_g.add_edge(4,5,weight=15)
-    >>> solution_g.add_edge(5,6,weight=32)
-    >>> solution_g.add_edge(6,4,weight=27)
     >>> g = build_test_graph_2()
-    >>> clique = FastWClq_Algorithm(g,100)
-    >>> nx.is_isomorphic(solution_g,g)
-    False
+    >>> clique = FastWClq_Algorithm(g,10)
+    >>> print(clique)
+    ([3, 2, 1, 0], 44)
 
     Example 3: A large graph (with one component which divides into 2 components) is weighted and unadjusted.
     In this graph there are 2 clique after removing "bad" vertices
-    >>> solution_g = nx.Graph()
-    >>> solution_g.add_node(4)
-    >>> solution_g.add_node(5)
-    >>> solution_g.add_node(6)
-    >>> solution_g.add_edge(4,5,weight=15)
-    >>> solution_g.add_edge(5,6,weight=32)
-    >>> solution_g.add_edge(6,4,weight=27)
     >>> g = build_test_graph_3()
-    >>> clique = FastWClq_Algorithm(g,100)
-    >>> nx.is_isomorphic(solution_g,g)
-    False
+    >>> clique = FastWClq_Algorithm(g,10)
+    >>> print(clique)
+    ([2, 0, 3, 1], 37)
 
     Example 4: A huge graph with 100,000 nodes (2^n while n>=17)
     In most cases on heavy graphs, the algorithm will not find the final solution but will find a better solution than the other algorithms
     (If given enough time the algorithm will find the best clique)
-    >>> clique_list = [8,25,48,55,128,546,7850,45123,85147,97852]
-    >>> g = nx.Graph()
-    >>> for key in clique_list:
-    ...     g.add_node(key)
-    >>> for i in range(len(clique_list)):
-    ...    for j in range(len(clique_list)):
-    ...         if i!=j:
-    ...            g.add_edge(clique_list[j],clique_list[i],weight=random.randint(0,10000))
-    >>> g = build_test_graph_4()
-    >>> clique = FastWClq_Algorithm(g,100)
-    >>> nx.is_isomorphic(solution_g,g)
-    False
+    g = build_test_graph_4()
+    clique = FastWClq_Algorithm(g,10)
+    print(clique)
+
 
     Example 5: A graph with 1000 individual vertices without sides (the weight is on the vertices).
     In this example we assume that the vertex number also constitutes its weight
     >>> g = nx.Graph()
     >>> for key in range(1000):
-    ...     g.add_node(key)
-    ...     g.add_edge(key,key,weight = key)
+    ...     g.add_node(key,weight = key)
+    ...     g.add_edge(key,key)
     >>> g = build_test_graph_5()
-    >>> clique = FastWClq_Algorithm(g,100)
-    >>> nx.is_isomorphic(solution_g,g)
-    False
+    >>> clique = FastWClq_Algorithm(g,10)
+    >>> print(clique)
+    ([999], 999)
     """
     start = time.time()
     c = nx.Graph()
@@ -413,11 +375,41 @@ def FastWClq_Algorithm(g: nx.Graph, cutoff: float) -> nx.Graph:
         g = ReduceGraph(g, best_c)
         if g is None:
             return best_c
+    best_c = improveClique(best_c)
     return best_c
 
 
+def toString(t):
+    g = nx.Graph()
+    for n in t[0]:
+        g.add_node(n, weight=100)
+    for i in t[0]:
+        for j in t[0]:
+            if i != j:
+                g.add_edge(i, j)
+    print("Nodes: " + str(t[0]))
+    print("Weight: " + str(t[1]))
+    val_map = {'A': 1.0,
+               'D': 0.5714285714285714,
+               'H': 0.0}
+
+    values = [val_map.get(node, 0.25) for node in g.nodes()]
+
+    black_edges = [edge for edge in g.edges()]
+
+    # Need to create a layout when doing
+    # separate calls to draw nodes and edges
+    pos = nx.spring_layout(g)
+    nx.draw_networkx_nodes(g, pos, cmap=plt.get_cmap('jet'),
+                           node_color="red", node_size=500)
+    nx.draw_networkx_labels(g, pos)
+    nx.draw_networkx_edges(g, pos, edgelist=black_edges, arrows=False)
+    plt.title("Best Weight Clique - FastWClq_Algorithm")
+    plt.show()
+
 
 if __name__ == '__main__':
+    """
     g = nx.Graph()
     g.add_node(1, weight=1)
     g.add_node(5, weight=5)
@@ -429,5 +421,7 @@ if __name__ == '__main__':
     g.add_edge(7, 9)
     g.add_edge(5, 7)
     g.add_edge(5, 9)
-    print(FastWClq_Algorithm(g,10).nodes)
-
+    toString(FastWClq_Algorithm(g,10))
+    """
+    (failures, tests) = doctest.testmod(report=True)
+    print("{} failures, {} tests".format(failures, tests))
