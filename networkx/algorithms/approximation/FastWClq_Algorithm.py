@@ -106,7 +106,7 @@ def build_test_graph_3():
 
 
 def build_test_graph_4():
-    clique_list = [8, 25, 48, 55, 128, 546, 7850, 45123, 85147, 97852]
+    clique_list = [8, 25, 48, 55, 128, 546, 768, 454, 985, 234]
     g = nx.Graph()
     for key in range(1,1000):
         g.add_node(key, weight=key)
@@ -166,8 +166,9 @@ def choose_solution_vertex(g, cand_set, t):
     # if len(cand_set) < t:
     # upper/lower bound is missing, need to understand the if statement
     # for node in cand_set:
-    v_best = random.randint(0, len(cand_set) - 1)
-    v_best_key = list(cand_set)[v_best]
+    if len(cand_set) != 0  :
+        v_best = random.randint(0, len(cand_set) - 1)
+        v_best_key = list(cand_set)[v_best]
     for i in range(t):
         v_temp = random.randint(0, len(cand_set) - 1)
         v_temp_key = list(cand_set)[v_temp]
@@ -251,7 +252,7 @@ def FindClique(g, best_c):
     u_node_key = list(start_set)[rand]
     c.add_node(u_node_key, weight=g.nodes[u_node_key]["weight"])
     cand_set = [n for n in g.neighbors(u_node_key)]
-    while cand_set is not None:
+    while len(cand_set) != 0 :
         v = choose_solution_vertex(g, cand_set, t)
         a = get_weight_clique(c)
         b = g.nodes[v]["weight"]
@@ -409,19 +410,11 @@ def toString(t):
 
 
 if __name__ == '__main__':
-    """
-    g = nx.Graph()
-    g.add_node(1, weight=1)
-    g.add_node(5, weight=5)
-    g.add_node(7, weight=7)
-    g.add_node(9, weight=9)
-    g.add_edge(1, 7)
-    g.add_edge(5, 1)
-    g.add_edge(1, 9)
-    g.add_edge(7, 9)
-    g.add_edge(5, 7)
-    g.add_edge(5, 9)
-    toString(FastWClq_Algorithm(g,10))
+
+
+    s = build_test_graph_4()
+    toString(FastWClq_Algorithm(s,1))
     """
     (failures, tests) = doctest.testmod(report=True)
     print("{} failures, {} tests".format(failures, tests))
+    """
